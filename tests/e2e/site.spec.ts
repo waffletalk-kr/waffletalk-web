@@ -3,8 +3,8 @@ import { expect, test } from '@playwright/test';
 test('홈에서 핵심 가치와 주문 CTA를 바로 확인할 수 있다', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('방금 구운 와플');
-  const orderLink = page.getByRole('link', { name: '온라인 주문하기' }).first();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('와플은 주문받고');
+  const orderLink = page.getByRole('link', { name: '메뉴 보고 주문하기' }).first();
   await expect(orderLink).toBeVisible();
   await expect(orderLink).toHaveAttribute('href', 'https://store.payhere.in/waffletalk');
 });
@@ -21,10 +21,10 @@ test('메뉴 분류와 확인된 가격을 정적 HTML로 제공한다', async (
 test('주문 준비시간과 전화 대체 수단을 안내한다', async ({ page }) => {
   await page.goto('/order');
 
-  await expect(page.getByRole('heading', { name: '메뉴별 준비시간 안내' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '메뉴마다 준비시간이 달라요' })).toBeVisible();
   await expect(page.getByText('약 15분')).toBeVisible();
-  await expect(page.getByText('최소 하루 전')).toBeVisible();
-  await expect(page.getByRole('link', { name: /033-641-3738 전화하기/ })).toHaveAttribute('href', 'tel:+82336413738');
+  await expect(page.getByText('최소 1일 전')).toBeVisible();
+  await expect(page.getByRole('link', { name: /전화로 확인하기/ })).toHaveAttribute('href', 'tel:+82336413738');
 });
 
 test('매장 안내에서 세 지도 서비스와 테이크아웃 정보를 제공한다', async ({ page }) => {
@@ -32,9 +32,9 @@ test('매장 안내에서 세 지도 서비스와 테이크아웃 정보를 제�
 
   await expect(page.getByText('강원특별자치도 강릉시 옥천로 34, 1층 102호').first()).toBeVisible();
   await expect(page.getByText('테이크아웃 중심 매장').first()).toBeVisible();
-  await expect(page.getByRole('link', { name: '네이버지도 길찾기' })).toBeVisible();
-  await expect(page.getByRole('link', { name: '카카오맵 길찾기' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Google Maps 길찾기' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '네이버지도에서 길찾기' })).toBeVisible();
+  await expect(page.getByRole('link', { name: '카카오맵에서 길찾기' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Google Maps에서 길찾기' })).toBeVisible();
 });
 
 test('모바일 고정 바에서 주문·전화·길찾기를 한 번에 실행할 수 있다', async ({ page }, testInfo) => {
