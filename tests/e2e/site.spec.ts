@@ -18,6 +18,7 @@ test('메뉴 분류와 확인된 가격을 정적 HTML로 제공한다', async (
   await expect(page.getByText('신선한 생크림이 들어간 와플이에요.')).toBeVisible();
   await expect(page.getByRole('img', { name: '흰 생크림으로 장식한 원형 생크림 케이크' })).toBeVisible();
   await expect(page.getByRole('img', { name: '초코 생크림으로 장식한 원형 초코 생크림 케이크' })).toBeVisible();
+  await expect(page.getByText('확인 중')).toHaveCount(0);
 });
 
 test('주문 준비시간과 전화 대체 수단을 안내한다', async ({ page }) => {
