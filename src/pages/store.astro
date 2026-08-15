@@ -1,0 +1,211 @@
+---
+import ActionLink from '@/components/ActionLink.astro';
+import BusinessStatus from '@/components/BusinessStatus.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatHours } from '@/lib/business-hours';
+import { getSiteContent } from '@/lib/sanity';
+import { resolvePageSeo } from '@/lib/page-seo';
+
+const content = await getSiteContent();
+const { settings, businessHours, specialHours } = content;
+const mapLinks = [
+  { name: '네이버지도', href: settings.links.naverMap, service: 'naver' },
+  { name: '카카오맵', href: settings.links.kakaoMap, service: 'kakao' },
+  { name: 'Google Maps', href: settings.links.googleMaps, service: 'google' },
+];
+const seo = resolvePageSeo(content, '/store', {
+  title: '매장 안내와 영업시간',
+  description: '강릉시 옥천로 34 와플톡의 주소, 전화, 영업시간, 주차 및 네이버지도·카카오맵·Google Maps 길찾기를 확인하세요.',
+});
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  canonicalPath={seo.canonical ?? seo.path}
+  ogImage={seo.shareImageUrl}
+  settings={settings}
+  businessHours={businessHours}
+  specialHours={specialHours}
+>
+  <header class="page-intro shell store-intro">
+    <div>
+      <p class="eyebrow">Store & pick-up</p>
+      <h1>찾기 쉽게,<br />받기 빠르게.</h1>
+      <p>강릉 옥천로 34, 1층 102호에 있는 테이크아웃 중심 매장입니다. 방문 전 영업 상태와 주문 가능 여부를 확인해 주세요.</p>
+      <BusinessStatus businessHours={businessHours} specialHours={specialHours} />
+    </div>
+    <div class="store-stamp" aria-label="테이크아웃 중심 매장">
+      <span>WAFFLE TALK</span>
+      <strong>TAKE<br />OUT</strong>
+      <small>OKCHEON · GANGNEUNG</small>
+    </div>
+  </header>
+
+  <section class="section store-details" aria-labelledby="store-address-title">
+    <div class="shell store-details__grid">
+      <article class="store-card store-card--address">
+        <p class="eyebrow">Address</p>
+        <h2 id="store-address-title">{settings.address}</h2>
+        <p>좌석 이용을 전제로 한 카페가 아닌 테이크아웃 중심 매장입니다.</p>
+        <div class="map-actions">
+          {mapLinks.map((map) => (
+            <ActionLink href={map.href} label={`${map.name} 길찾기`} icon="map" variant={map.service === 'naver' ? 'brand' : 'outline'} event="directions_click" location="store_maps" service={map.service} />
+          ))}
+        </div>
+      </article>
+
+      <article class="store-card">
+        <p class="eyebrow">Hours</p>
+        <h2>영업시간</h2>
+        {settings.hoursVerified && businessHours.length ? (
+          <dl class="hours-list">
+            {businessHours.map((entry) => <><dt>{entry.label}</dt><dd>{formatHours(entry)}</dd></>)}
+          </dl>
+        ) : (
+          <div class="notice">
+            <strong>운영자 최종 확인 전입니다.</strong>
+            <p>토요일 영업, 공휴일·임시휴무, 마지막 주문 시간을 하나의 승인값으로 확정한 뒤 공개합니다.</p>
+          </div>
+        )}
+        <ActionLink href={settings.telephoneHref} label={`${settings.telephone} 전화 확인`} icon="phone" variant="outline" event="phone_click" location="store_hours" />
+      </article>
+    </div>
+  </section>
+
+  <section class="section shell arrival" aria-labelledby="parking-title">
+    <div class="section-heading">
+      <p class="eyebrow">Arrival notes</p>
+      <h2 id="parking-title">주차와 도보 안내</h2>
+    </div>
+    <div class="card-grid card-grid--2">
+      <article class="info-card">
+        <span class="arrival__number">01</span>
+        <h3>강릉 동부시장 공영주차장</h3>
+        <p>공영주차장 이용 안내가 등록되어 있습니다. 1시간 무료 적용 조건과 주차권 제공 여부는 매장주 확인 전까지 확정 정보로 표시하지 않습니다.</p>
+      </article>
+      <article class="info-card">
+        <span class="arrival__number">02</span>
+        <h3>픽업 위치 확인</h3>
+        <p>건물 1층 102호에서 주문한 메뉴를 받으세요. 버스 정류장과 강릉여고 후문 기준 보행 안내는 현장 동선 확인 후 추가합니다.</p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .store-intro {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .store-intro :global(.business-status) {
+    margin-top: 1.5rem;
+  }
+
+  .store-stamp {
+    display: grid;
+    width: min(16rem, 72vw);
+    aspect-ratio: 1;
+    place-items: center;
+    justify-self: center;
+    transform: rotate(3deg);
+    border: 3px double var(--color-toast-800);
+    border-radius: 50%;
+    background: var(--color-batter-400);
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .store-stamp span,
+  .store-stamp small {
+    font-family: var(--font-utility);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .store-stamp strong {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    line-height: 0.95;
+  }
+
+  .store-details {
+    border-block: 2px solid var(--color-toast-800);
+    background: var(--color-cream-100);
+  }
+
+  .store-details__grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .store-card {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    border: 1px solid color-mix(in srgb, var(--color-toast-800) 22%, transparent);
+    border-radius: 1rem;
+    background: var(--color-cream-50);
+    padding: clamp(1.25rem, 4vw, 2rem);
+  }
+
+  .store-card h2,
+  .store-card p {
+    margin-bottom: 0;
+  }
+
+  .store-card--address h2 {
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+  }
+
+  .map-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .hours-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.65rem 1rem;
+    margin: 0;
+  }
+
+  .hours-list dt {
+    color: var(--color-ink-700);
+  }
+
+  .hours-list dd {
+    margin: 0;
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .notice p {
+    margin: 0.4rem 0 0;
+  }
+
+  .arrival__number {
+    color: var(--color-berry-600);
+    font-family: var(--font-utility);
+    font-weight: 700;
+  }
+
+  .arrival .info-card p {
+    margin-bottom: 0;
+    color: var(--color-ink-700);
+  }
+
+  @media (min-width: 48rem) {
+    .store-intro {
+      grid-template-columns: 1fr auto;
+    }
+
+    .store-details__grid {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+  }
+</style>

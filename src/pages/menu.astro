@@ -1,0 +1,144 @@
+---
+import ActionLink from '@/components/ActionLink.astro';
+import MenuCard from '@/components/MenuCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getSiteContent } from '@/lib/sanity';
+import { resolvePageSeo } from '@/lib/page-seo';
+
+const content = await getSiteContent();
+const { settings, businessHours, specialHours, categories, menuItems } = content;
+const visibleCategories = categories.filter((category) =>
+  menuItems.some((item) => item.categoryId === category.id),
+);
+const seo = resolvePageSeo(content, '/menu', {
+  title: '메뉴와 가격',
+  description: '와플톡의 옛날 와플, 생크림 와플, 누텔라 와플, 컵 떡볶이, 또띠아와 홀케이크 메뉴 및 가격을 확인하세요.',
+});
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  canonicalPath={seo.canonical ?? seo.path}
+  ogImage={seo.shareImageUrl}
+  settings={settings}
+  businessHours={businessHours}
+  specialHours={specialHours}
+  pageEvent="menu_view"
+>
+  <header class="page-intro shell">
+    <p class="eyebrow">Menu & price</p>
+    <h1>오늘은 어떤 조합으로<br />픽업할까요?</h1>
+    <p>현재 공식 주문 페이지에서 확인한 메뉴와 가격을 정리했습니다. 판매 상태와 알레르기 정보는 출시 직전 매장 승인값으로 갱신합니다.</p>
+    <div class="action-row">
+      <ActionLink href={settings.links.order} label="페이히어에서 주문하기" icon="order" event="order_click" location="menu_intro" />
+      <ActionLink href="/order" label="준비시간 먼저 보기" icon="clock" variant="outline" />
+    </div>
+  </header>
+
+  <nav class="shell chip-list" aria-label="메뉴 분류">
+    {visibleCategories.map((category) => <a class="chip" href={`#${category.id}`}>{category.title}</a>)}
+  </nav>
+
+  <div class="shell menu-sections">
+    {visibleCategories.map((category) => {
+      const items = menuItems.filter((item) => item.categoryId === category.id);
+      return (
+        <section class="menu-section" id={category.id} aria-labelledby={`${category.id}-title`}>
+          <div class="menu-section__heading">
+            <div>
+              <p class="eyebrow">{String(category.order).padStart(2, '0')}</p>
+              <h2 id={`${category.id}-title`}>{category.title}</h2>
+            </div>
+            <p>{category.description}</p>
+          </div>
+          <div class="menu-grid">
+            {items.map((item) => <MenuCard item={item} orderUrl={settings.links.order} showOrder location="menu_list" />)}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+
+  <aside class="shell section-tight menu-note" aria-labelledby="menu-note-title">
+    <div>
+      <p class="eyebrow">Before ordering</p>
+      <h2 id="menu-note-title">표시된 시간은 준비 안내 기준이에요.</h2>
+      <p>주문량과 재료 상황에 따라 준비시간이 달라질 수 있습니다. 정확한 주문 가능 여부는 페이히어 주문 화면 또는 전화로 확인해 주세요.</p>
+    </div>
+    <ActionLink href={settings.telephoneHref} label={`${settings.telephone} 전화하기`} icon="phone" variant="outline" event="phone_click" location="menu_note" />
+  </aside>
+</BaseLayout>
+
+<style>
+  .menu-sections {
+    padding-block: 2rem clamp(4rem, 10vw, 8rem);
+  }
+
+  .menu-section {
+    padding-block: clamp(2.5rem, 7vw, 5rem);
+    scroll-margin-top: 7rem;
+  }
+
+  .menu-section + .menu-section {
+    border-top: 1px dashed color-mix(in srgb, var(--color-toast-800) 32%, transparent);
+  }
+
+  .menu-section__heading {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .menu-section__heading h2,
+  .menu-section__heading p {
+    margin-bottom: 0;
+  }
+
+  .menu-section__heading > p {
+    max-width: 28rem;
+    color: var(--color-ink-700);
+  }
+
+  .menu-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .menu-note {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: clamp(3rem, 8vw, 6rem);
+    border-block: 2px solid var(--color-toast-800);
+  }
+
+  .menu-note h2,
+  .menu-note p:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 40rem) {
+    .menu-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .menu-section__heading,
+    .menu-note {
+      grid-template-columns: 1fr auto;
+    }
+
+    .menu-section__heading > p {
+      align-self: end;
+      text-align: right;
+    }
+  }
+
+  @media (min-width: 70rem) {
+    .menu-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>
