@@ -160,6 +160,8 @@ export const fallbackContent: SiteContent = {
       seasonal: false,
       featured: false,
       allergens: [],
+      imageUrl: '/images/menu/cream-cake.jpg',
+      imageAlt: '흰 생크림으로 장식한 원형 생크림 케이크',
       updatedAt: '2026-08-15',
     },
     {
@@ -172,6 +174,8 @@ export const fallbackContent: SiteContent = {
       seasonal: false,
       featured: false,
       allergens: [],
+      imageUrl: '/images/menu/chocolate-cream-cake.jpg',
+      imageAlt: '초코 생크림으로 장식한 원형 초코 생크림 케이크',
       updatedAt: '2026-08-15',
     },
     {
