@@ -1,0 +1,72 @@
+---
+import type { SiteSettings } from '@/types/content';
+import ActionLink from './ActionLink.astro';
+
+interface Props {
+  settings: SiteSettings;
+}
+
+const { settings } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="shell site-footer__grid">
+    <div>
+      <p class="eyebrow">Gangneung · Okcheon</p>
+      <h2>{settings.name}</h2>
+      <p>{settings.description}</p>
+      <p class="notice">테이크아웃 중심 매장입니다. 영업시간과 주차 무료 조건은 운영자 최종 확인 후 공개합니다.</p>
+    </div>
+    <div class="site-footer__info">
+      <address>{settings.address}</address>
+      <a href={settings.telephoneHref} data-analytics-event="phone_click" data-analytics-location="footer">{settings.telephone}</a>
+      <div class="action-row">
+        <ActionLink href={settings.links.order} label="온라인 주문하기" icon="order" event="order_click" location="footer" />
+        <ActionLink href={settings.links.naverMap} label="길찾기" icon="map" variant="outline" event="directions_click" location="footer" service="naver" />
+      </div>
+    </div>
+  </div>
+  <div class="shell site-footer__bottom">
+    <small>© {new Date().getFullYear()} {settings.name}. 매장 운영 정보는 출시 전 최종 확인이 필요합니다.</small>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 2px solid var(--color-toast-800);
+    background: var(--color-batter-400);
+    padding-block: clamp(3rem, 8vw, 5rem) 2rem;
+  }
+
+  .site-footer__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .site-footer h2 {
+    margin-bottom: 0.75rem;
+  }
+
+  .site-footer__info {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+  }
+
+  .site-footer address {
+    font-style: normal;
+    font-weight: 700;
+  }
+
+  .site-footer__bottom {
+    margin-top: 3rem;
+    border-top: 1px solid rgba(90, 46, 27, 0.28);
+    padding-top: 1rem;
+  }
+
+  @media (min-width: 48rem) {
+    .site-footer__grid {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+</style>

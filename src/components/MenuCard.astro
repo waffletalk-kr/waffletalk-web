@@ -1,0 +1,145 @@
+---
+import type { MenuItem } from '@/types/content';
+import ActionLink from './ActionLink.astro';
+
+interface Props {
+  item: MenuItem;
+  showOrder?: boolean;
+  orderUrl: string;
+  location?: string;
+}
+
+const { item, showOrder = false, orderUrl, location = 'menu_card' } = Astro.props;
+const price = new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW', maximumFractionDigits: 0 }).format(item.price);
+const statusLabels = {
+  available: '판매 중',
+  soldOut: '오늘 품절',
+  seasonEnded: '현재 판매 종료',
+  unverified: '출시 전 확인',
+};
+---
+
+<article class="menu-card" data-menu-status={item.status}>
+  <div class="menu-card__visual">
+    {item.imageUrl ? (
+      <img src={item.imageUrl} width="640" height="480" loading="lazy" decoding="async" alt={item.imageAlt ?? `${item.name} 메뉴 사진`} />
+    ) : (
+      <div class="menu-card__waffle" aria-hidden="true"></div>
+    )}
+    <span class="menu-card__status">{statusLabels[item.status]}</span>
+  </div>
+  <div class="menu-card__body">
+    <div class="menu-card__title-row">
+      <h3>{item.name}</h3>
+      <strong class="price">{price}</strong>
+    </div>
+    <p>{item.description}</p>
+    <dl class="menu-card__meta">
+      {item.preparationMinutes && <><dt>준비시간</dt><dd>약 {item.preparationMinutes}분</dd></>}
+      <dt>가격 확인일</dt><dd>{item.updatedAt}</dd>
+      <dt>알레르기</dt><dd>{item.allergens.length ? item.allergens.join(', ') : '운영자 확인 중'}</dd>
+    </dl>
+    {showOrder && (
+      <ActionLink
+        href={orderUrl}
+        label="온라인 주문하기"
+        variant="weak"
+        icon="order"
+        event="order_click"
+        location={`${location}_${item.id}`}
+      />
+    )}
+  </div>
+</article>
+
+<style>
+  .menu-card {
+    display: grid;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-toast-800) 18%, transparent);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .menu-card__visual {
+    position: relative;
+    min-height: 10rem;
+    background: var(--color-batter-400);
+  }
+
+  .menu-card__visual img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .menu-card__waffle {
+    position: absolute;
+    inset: 1rem;
+    border-radius: 0.8rem;
+    background:
+      linear-gradient(90deg, transparent 46%, rgba(90, 46, 27, 0.22) 47% 53%, transparent 54%),
+      linear-gradient(transparent 46%, rgba(90, 46, 27, 0.22) 47% 53%, transparent 54%);
+    background-size: 3rem 3rem;
+    box-shadow: inset 0 0 0 2px rgba(90, 46, 27, 0.2);
+  }
+
+  .menu-card__status {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    border-radius: 9999px;
+    background: var(--color-cream-50);
+    padding: 0.4rem 0.7rem;
+    color: var(--color-toast-800);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .menu-card[data-menu-status='soldOut'] .menu-card__status,
+  .menu-card[data-menu-status='seasonEnded'] .menu-card__status {
+    color: var(--color-berry-600);
+  }
+
+  .menu-card__body {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding: 1.25rem;
+  }
+
+  .menu-card__title-row {
+    display: flex;
+    gap: 1rem;
+    align-items: start;
+    justify-content: space-between;
+  }
+
+  .menu-card h3,
+  .menu-card p {
+    margin-bottom: 0;
+  }
+
+  .menu-card p {
+    color: var(--color-ink-700);
+  }
+
+  .menu-card__meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35rem 0.8rem;
+    margin: 0;
+    font-size: 0.82rem;
+  }
+
+  .menu-card__meta dt {
+    color: var(--color-ink-700);
+  }
+
+  .menu-card__meta dd {
+    margin: 0;
+    font-weight: 700;
+  }
+</style>

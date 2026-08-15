@@ -1,0 +1,293 @@
+---
+import ActionLink from '@/components/ActionLink.astro';
+import BusinessStatus from '@/components/BusinessStatus.astro';
+import MenuCard from '@/components/MenuCard.astro';
+import PickupTicket from '@/components/PickupTicket.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getSiteContent } from '@/lib/sanity';
+import { resolvePageSeo } from '@/lib/page-seo';
+import { buildRestaurantStructuredData } from '@/lib/structured-data';
+
+const content = await getSiteContent();
+const { settings, businessHours, specialHours, menuItems } = content;
+const featured = menuItems.filter((item) => item.featured).slice(0, 4);
+const heroMenu = featured.find((item) => item.id === 'cream-waffle') ?? featured[0];
+const structuredData = buildRestaurantStructuredData(content, Astro.site ?? Astro.url);
+const seo = resolvePageSeo(content, '/', {
+  title: settings.name,
+  description: '강릉 옥천동에서 주문 즉시 만드는 수제 크림 와플과 떡볶이를 확인하고 미리 주문해 픽업하세요.',
+});
+---
+
+<BaseLayout
+  title={seo.title}
+  description={seo.description}
+  canonicalPath={seo.canonical ?? seo.path}
+  ogImage={seo.shareImageUrl}
+  settings={settings}
+  businessHours={businessHours}
+  specialHours={specialHours}
+  structuredData={structuredData}
+>
+  <section class="hero">
+    <div class="shell-wide hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">Gangneung · Fresh made · Pick-up</p>
+        <h1>방금 구운 와플,<br /><span>기다리지 말고 픽업하세요.</span></h1>
+        <p class="hero__lead">주문 즉시 만드는 크림 와플과 매콤한 떡볶이. 온라인으로 미리 주문하면 준비시간을 확인하고 편하게 가져갈 수 있어요.</p>
+        <div class="action-row">
+          <ActionLink href={settings.links.order} label="온라인 주문하기" icon="order" event="order_click" location="home_hero" />
+          <ActionLink href="/menu" label="메뉴와 가격 보기" icon="menu" variant="outline" />
+        </div>
+        <BusinessStatus businessHours={businessHours} specialHours={specialHours} />
+      </div>
+      <PickupTicket menuName={heroMenu?.name} price={heroMenu?.price} preparationMinutes={heroMenu?.preparationMinutes} />
+    </div>
+  </section>
+
+  <section class="section shell-wide" aria-labelledby="featured-menu">
+    <div class="section-heading">
+      <p class="eyebrow">먼저 고르는 메뉴</p>
+      <h2 id="featured-menu">와플 세 가지, 떡볶이 한 컵</h2>
+      <p class="muted">현재 주문 페이지에서 확인한 가격입니다. 판매 여부와 알레르기 정보는 출시 전에 다시 확인합니다.</p>
+    </div>
+    <div class="home-menu-grid">
+      {featured.map((item) => <MenuCard item={item} orderUrl={settings.links.order} showOrder location="home_featured" />)}
+    </div>
+    <div class="section-action">
+      <ActionLink href="/menu" label="전체 메뉴 확인하기" icon="arrow" variant="outline" />
+    </div>
+  </section>
+
+  <section class="section home-promise" aria-labelledby="why-waffletalk">
+    <div class="shell">
+      <div class="section-heading">
+        <p class="eyebrow">Made after your order</p>
+        <h2 id="why-waffletalk">빠르게 고르고, 천천히 만든 맛</h2>
+      </div>
+      <div class="card-grid card-grid--3">
+        <article class="info-card">
+          <span class="promise-mark" aria-hidden="true">굽</span>
+          <h3>주문 후 바로 굽기</h3>
+          <p>미리 쌓아두기보다 주문을 확인한 뒤 와플을 준비한다는 매장 안내를 기준으로 소개합니다.</p>
+        </article>
+        <article class="info-card">
+          <span class="promise-mark" aria-hidden="true">크</span>
+          <h3>부드러운 크림</h3>
+          <p>크림과 과일청의 직접 제조 범위는 운영자 확인 후 정확한 문장과 과정 사진으로 공개합니다.</p>
+        </article>
+        <article class="info-card">
+          <span class="promise-mark" aria-hidden="true">픽</span>
+          <h3>미리 주문하고 픽업</h3>
+          <p>와플은 약 15분, 떡볶이는 약 10분 안내 기준입니다. 주문량에 따라 달라질 수 있어요.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section shell combo" aria-labelledby="combo-title">
+    <div class="combo__visual" aria-hidden="true">
+      <div class="combo__waffle">달콤</div>
+      <div class="combo__tteokbokki">매콤</div>
+    </div>
+    <div class="combo__copy">
+      <p class="eyebrow">Sweet × Spicy</p>
+      <h2 id="combo-title">와플 하나,<br />떡볶이 한 컵</h2>
+      <p>달콤한 와플과 매콤한 컵 떡볶이를 한 번에 주문하세요. 따로 기다리지 않도록 온라인 주문으로 준비시간을 먼저 확인할 수 있어요.</p>
+      <ActionLink href="/order" label="준비시간 확인하기" icon="clock" variant="weak" />
+    </div>
+  </section>
+
+  <section class="section-tight shell store-quick" aria-labelledby="store-quick-title">
+    <div>
+      <p class="eyebrow">Take-out shop</p>
+      <h2 id="store-quick-title">강릉 옥천로 34,<br />1층 102호</h2>
+      <p>와플톡은 테이크아웃 중심 매장입니다. 주차 1시간 무료 적용 조건은 매장주 확인 후 안내합니다.</p>
+    </div>
+    <div class="store-quick__actions">
+      <ActionLink href={settings.links.naverMap} label="네이버지도로 길찾기" icon="map" event="directions_click" location="home_store" service="naver" />
+      <ActionLink href={settings.telephoneHref} label={`${settings.telephone} 전화하기`} icon="phone" variant="outline" event="phone_click" location="home_store" />
+      <a href={settings.links.naverPlace} data-analytics-event="review_click" data-analytics-location="home_store">네이버 플레이스에서 방문 정보 확인하기</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 2px solid var(--color-toast-800);
+    background: var(--color-batter-400);
+    padding-block: clamp(2.5rem, 7vw, 6rem);
+  }
+
+  .hero::before {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 47%, rgba(90, 46, 27, 0.1) 48% 52%, transparent 53%),
+      linear-gradient(transparent 47%, rgba(90, 46, 27, 0.1) 48% 52%, transparent 53%);
+    background-size: 6rem 6rem;
+    content: '';
+    mask-image: linear-gradient(to right, black, transparent 65%);
+  }
+
+  .hero__grid {
+    position: relative;
+    display: grid;
+    gap: clamp(2.5rem, 7vw, 5rem);
+    align-items: center;
+  }
+
+  .hero__copy {
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+
+  .hero h1 {
+    margin-bottom: 0;
+    color: var(--color-toast-800);
+  }
+
+  .hero h1 span {
+    display: inline-block;
+    border-bottom: 0.13em solid var(--color-berry-600);
+    color: var(--color-ink-950);
+  }
+
+  .hero__lead {
+    max-width: 39rem;
+    margin-bottom: 0;
+    font-size: clamp(1.06rem, 2.5vw, 1.25rem);
+    font-weight: 500;
+  }
+
+  .home-menu-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .section-action {
+    margin-top: 1.5rem;
+  }
+
+  .home-promise {
+    border-block: 1px solid color-mix(in srgb, var(--color-toast-800) 20%, transparent);
+    background: var(--color-cream-100);
+  }
+
+  .promise-mark {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    place-items: center;
+    margin-bottom: 1rem;
+    border-radius: 0.8rem;
+    background: var(--color-toast-800);
+    color: white;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+  }
+
+  .info-card p {
+    margin-bottom: 0;
+    color: var(--color-ink-700);
+  }
+
+  .combo {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .combo__visual {
+    position: relative;
+    min-height: 19rem;
+  }
+
+  .combo__waffle,
+  .combo__tteokbokki {
+    position: absolute;
+    display: grid;
+    width: 12rem;
+    height: 12rem;
+    place-items: center;
+    border: 3px solid var(--color-toast-800);
+    font-family: var(--font-display);
+    font-size: 2rem;
+  }
+
+  .combo__waffle {
+    top: 0;
+    left: 0;
+    border-radius: 1rem;
+    background:
+      linear-gradient(90deg, transparent 46%, rgba(90, 46, 27, 0.2) 47% 53%, transparent 54%),
+      linear-gradient(transparent 46%, rgba(90, 46, 27, 0.2) 47% 53%, transparent 54%),
+      var(--color-batter-400);
+    background-size: 3rem 3rem;
+    color: var(--color-toast-800);
+    transform: rotate(-5deg);
+  }
+
+  .combo__tteokbokki {
+    right: 0;
+    bottom: 0;
+    border-radius: 50% 50% 1.5rem 1.5rem;
+    background: var(--color-berry-600);
+    color: white;
+    transform: rotate(4deg);
+  }
+
+  .combo__copy p:not(.eyebrow) {
+    color: var(--color-ink-700);
+  }
+
+  .store-quick {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: clamp(3rem, 8vw, 6rem);
+    border: 2px solid var(--color-toast-800);
+    border-radius: 1rem;
+    background: white;
+    padding-inline: clamp(1.25rem, 5vw, 3rem);
+  }
+
+  .store-quick__actions {
+    display: grid;
+    gap: 0.75rem;
+    align-content: center;
+  }
+
+  @media (min-width: 40rem) {
+    .home-menu-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .hero__grid {
+      grid-template-columns: minmax(0, 7fr) minmax(22rem, 5fr);
+    }
+
+    .home-menu-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .combo,
+    .store-quick {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .combo__visual {
+      min-height: 24rem;
+    }
+
+    .combo__waffle,
+    .combo__tteokbokki {
+      width: 15rem;
+      height: 15rem;
+    }
+  }
+</style>

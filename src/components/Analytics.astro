@@ -1,0 +1,29 @@
+<script>
+  const analyticsWindow = window as typeof window & {
+    dataLayer?: Array<Record<string, string>>;
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const link = target.closest<HTMLElement>('[data-analytics-event]');
+    if (!link) return;
+
+    const eventName = link.dataset.analyticsEvent;
+    if (!eventName) return;
+    const detail = {
+      event: eventName,
+      location: link.dataset.analyticsLocation ?? 'unknown',
+      service: link.dataset.analyticsService ?? '',
+    };
+    analyticsWindow.dataLayer?.push(detail);
+    window.dispatchEvent(new CustomEvent('waffletalk:analytics', { detail }));
+  });
+
+  const pageEvent = document.documentElement.dataset.pageEvent;
+  if (pageEvent) {
+    const detail = { event: pageEvent, location: window.location.pathname, service: '' };
+    analyticsWindow.dataLayer?.push(detail);
+    window.dispatchEvent(new CustomEvent('waffletalk:analytics', { detail }));
+  }
+</script>

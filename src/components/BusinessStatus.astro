@@ -1,0 +1,60 @@
+---
+import { getBusinessStatus } from '@/lib/business-hours';
+import type { BusinessHoursEntry, SpecialHoursEntry } from '@/types/content';
+
+interface Props {
+  businessHours: BusinessHoursEntry[];
+  specialHours: SpecialHoursEntry[];
+  compact?: boolean;
+}
+
+const { businessHours, specialHours, compact = false } = Astro.props;
+const status = getBusinessStatus(businessHours, specialHours);
+const schedule = JSON.stringify({ businessHours, specialHours });
+---
+
+<div class:list={['business-status', { 'business-status--compact': compact }]} data-business-status data-schedule={schedule}>
+  <span class="status-pill" data-status-pill data-state={status.state}>
+    <span data-status-label>{status.label}</span>
+  </span>
+  {!compact && <p class="business-status__detail muted" data-status-detail>{status.detail}</p>}
+</div>
+
+<script>
+  import { getBusinessStatus } from '@/lib/business-hours';
+
+  const refreshStatuses = () => {
+    document.querySelectorAll<HTMLElement>('[data-business-status]').forEach((element) => {
+      const rawSchedule = element.dataset.schedule;
+      if (!rawSchedule) return;
+      const { businessHours, specialHours } = JSON.parse(rawSchedule);
+      const status = getBusinessStatus(businessHours, specialHours, new Date());
+      const pill = element.querySelector<HTMLElement>('[data-status-pill]');
+      const label = element.querySelector<HTMLElement>('[data-status-label]');
+      const detail = element.querySelector<HTMLElement>('[data-status-detail]');
+      if (pill) pill.dataset.state = status.state;
+      if (label) label.textContent = status.label;
+      if (detail) detail.textContent = status.detail;
+    });
+  };
+
+  refreshStatuses();
+  window.setInterval(refreshStatuses, 60_000);
+</script>
+
+<style>
+  .business-status {
+    display: grid;
+    gap: 0.55rem;
+    justify-items: start;
+  }
+
+  .business-status--compact {
+    display: inline-flex;
+  }
+
+  .business-status__detail {
+    margin: 0;
+    font-size: 0.86rem;
+  }
+</style>

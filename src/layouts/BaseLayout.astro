@@ -1,0 +1,72 @@
+---
+import '@fontsource/gowun-dodum/400.css';
+import '@fontsource-variable/noto-sans-kr';
+import '@/styles/global.css';
+
+import type { BusinessHoursEntry, SiteSettings, SpecialHoursEntry } from '@/types/content';
+import Analytics from '@/components/Analytics.astro';
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import MobileActionBar from '@/components/MobileActionBar.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  settings: SiteSettings;
+  businessHours: BusinessHoursEntry[];
+  specialHours: SpecialHoursEntry[];
+  canonicalPath?: string;
+  ogImage?: string;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
+  pageEvent?: string;
+}
+
+const {
+  title,
+  description,
+  settings,
+  businessHours,
+  specialHours,
+  canonicalPath = Astro.url.pathname,
+  ogImage = '/og-default.svg',
+  structuredData,
+  pageEvent,
+} = Astro.props;
+const base = Astro.site ?? Astro.url.origin;
+const canonical = new URL(canonicalPath, base);
+const ogImageUrl = new URL(ogImage, base);
+const fullTitle = title === settings.name ? title : `${title} | ${settings.name}`;
+---
+
+<!doctype html>
+<html lang="ko" data-page-event={pageEvent}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#F2BE4B" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content={settings.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {structuredData && <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+    <Header currentPath={Astro.url.pathname} settings={settings} businessHours={businessHours} specialHours={specialHours} />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer settings={settings} />
+    <MobileActionBar settings={settings} />
+    <Analytics />
+  </body>
+</html>

@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  label: string;
+  variant?: 'brand' | 'weak' | 'outline';
+  icon?: 'arrow' | 'clock' | 'external' | 'map' | 'menu' | 'order' | 'phone' | 'waffle';
+  event?: string;
+  location?: string;
+  service?: string;
+  class?: string;
+}
+
+const {
+  href,
+  label,
+  variant = 'brand',
+  icon,
+  event,
+  location,
+  service,
+  class: className = '',
+} = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['action-link', `action-link--${variant}`, className]}
+  data-analytics-event={event}
+  data-analytics-location={location}
+  data-analytics-service={service}
+>
+  {icon && <Icon name={icon} />}
+  <span>{label}</span>
+</a>
