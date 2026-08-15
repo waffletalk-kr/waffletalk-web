@@ -1,10 +1,12 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-carrot-100: #fff2ec;
-  --color-carrot-200: #ffe8db;
-  --color-carrot-600: #ff6600;
-  --color-carrot-700: #e14d00;
+  --color-waffle-100: #fff4c9;
+  --color-waffle-200: #f8e5a1;
+  --color-waffle-700: #8a6500;
+  --color-waffle-800: #6f5000;
+  --color-cocoa-100: #f3e8de;
+  --color-cocoa-700: #6b4932;
   --color-gray-00: #ffffff;
   --color-gray-100: #f7f8f9;
   --color-gray-200: #f3f4f5;
@@ -14,8 +16,27 @@
   --color-gray-1000: #1a1c20;
 }
 
+:root[data-seed][data-seed-color-mode='light-only'] {
+  --seed-color-fg-brand: #7d5a00;
+  --seed-color-fg-brand-contrast: #5c4200;
+  --seed-color-bg-brand-solid: #8a6500;
+  --seed-color-bg-brand-solid-pressed: #6f5000;
+  --seed-color-bg-brand-weak: #fff4c9;
+  --seed-color-bg-brand-weak-pressed: #f8e5a1;
+  --seed-color-stroke-brand-solid: #7d5a00;
+  --seed-color-stroke-brand-weak: #ddc36e;
+  --seed-color-stroke-focus-ring: #7d5a00;
+  --seed-color-fg-neutral: #2d2520;
+  --seed-color-fg-neutral-muted: #665b53;
+  --seed-color-fg-neutral-subtle: #82766d;
+  --seed-color-bg-neutral-weak: #f3ede7;
+  --seed-color-bg-neutral-weak-pressed: #e8ded5;
+  --seed-color-bg-layer-fill: #faf7f3;
+  --seed-color-bg-layer-basement: #f3ede7;
+}
+
 :root {
-  color: #1a1c20;
+  color: #2d2520;
   background: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
   font-synthesis: none;
@@ -38,6 +59,10 @@
   --color-stroke-neutral-muted: var(--seed-color-stroke-neutral-muted);
   --color-stroke-neutral-subtle: var(--seed-color-stroke-neutral-subtle);
   --color-stroke-focus-ring: var(--seed-color-stroke-focus-ring);
+  --color-secondary: #6b4932;
+  --color-secondary-muted: #876b59;
+  --color-bg-secondary-weak: #f3e8de;
+  --color-stroke-secondary: #d7c1af;
 
   /* SEED spacing and radius scale */
   --dimension-x1: var(--seed-dimension-x1);
