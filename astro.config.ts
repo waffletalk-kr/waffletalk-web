@@ -2,7 +2,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 
-const site = process.env.PUBLIC_SITE_URL ?? 'http://localhost:4321';
+const site = process.env.PUBLIC_SITE_URL ?? 'https://waffletalk.vercel.app';
 
 export default defineConfig({
   site,

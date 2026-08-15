@@ -27,7 +27,7 @@ Sanity 연결 전에도 확인된 메뉴·주소·전화 기준값으로 사이�
 ## 환경 변수
 
 ```dotenv
-PUBLIC_SITE_URL=https://실제-도메인
+PUBLIC_SITE_URL=https://waffletalk.vercel.app
 PUBLIC_SANITY_PROJECT_ID=Sanity-project-id
 PUBLIC_SANITY_DATASET=production
 PUBLIC_SANITY_API_VERSION=2026-08-15
