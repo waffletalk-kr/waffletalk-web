@@ -26,10 +26,11 @@ const price = new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW
       <strong class="price">{price}</strong>
     </div>
     <p>{item.description}</p>
-    <dl class="menu-card__meta">
-      {item.preparationMinutes && <><dt>준비시간</dt><dd>약 {item.preparationMinutes}분</dd></>}
-      <dt>알레르기</dt><dd>{item.allergens.length ? item.allergens.join(', ') : '확인 중'}</dd>
-    </dl>
+    {item.preparationMinutes && (
+      <dl class="menu-card__meta">
+        <dt>준비시간</dt><dd>약 {item.preparationMinutes}분</dd>
+      </dl>
+    )}
     {showOrder && (
       <ActionLink
         href={orderUrl}

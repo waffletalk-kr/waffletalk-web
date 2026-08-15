@@ -15,7 +15,7 @@ test('메뉴 분류와 확인된 가격을 정적 HTML로 제공한다', async (
   await expect(page.getByRole('heading', { name: '와플', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: '생크림 와플' })).toBeVisible();
   await expect(page.getByText('₩2,500')).toBeVisible();
-  await expect(page.getByText('알레르기').first()).toBeVisible();
+  await expect(page.getByText('신선한 생크림이 들어간 와플이에요.')).toBeVisible();
 });
 
 test('주문 준비시간과 전화 대체 수단을 안내한다', async ({ page }) => {
@@ -32,6 +32,7 @@ test('매장 안내에서 세 지도 서비스와 테이크아웃 정보를 제�
 
   await expect(page.getByText('강원특별자치도 강릉시 옥천로 34, 1층 102호').first()).toBeVisible();
   await expect(page.getByText('테이크아웃 중심 매장').first()).toBeVisible();
+  await expect(page.getByText('11:30–19:00').first()).toBeVisible();
   await expect(page.getByRole('link', { name: '네이버지도에서 길찾기' })).toBeVisible();
   await expect(page.getByRole('link', { name: '카카오맵에서 길찾기' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Google Maps에서 길찾기' })).toBeVisible();
