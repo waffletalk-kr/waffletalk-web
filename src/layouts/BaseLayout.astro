@@ -1,6 +1,5 @@
 ---
-import '@fontsource/gowun-dodum/400.css';
-import '@fontsource-variable/noto-sans-kr';
+import '@seed-design/css/base.css';
 import '@/styles/global.css';
 
 import type { BusinessHoursEntry, SiteSettings, SpecialHoursEntry } from '@/types/content';
@@ -39,12 +38,13 @@ const fullTitle = title === settings.name ? title : `${title} | ${settings.name}
 ---
 
 <!doctype html>
-<html lang="ko" data-page-event={pageEvent}>
+<html lang="ko" data-seed data-seed-color-mode="light-only" data-page-event={pageEvent}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="color-scheme" content="light" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#F2BE4B" />
+    <meta name="theme-color" content="#FFFFFF" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />

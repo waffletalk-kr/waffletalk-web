@@ -12,44 +12,44 @@ const { settings } = Astro.props;
 <footer class="site-footer">
   <div class="shell site-footer__grid">
     <div>
-      <p class="eyebrow">Gangneung · Okcheon</p>
+      <p class="section-kicker">강릉 옥천동 테이크아웃</p>
       <h2>{settings.name}</h2>
       <p>{settings.description}</p>
-      <p class="notice">테이크아웃 중심 매장입니다. 영업시간과 주차 무료 조건은 운영자 최종 확인 후 공개합니다.</p>
     </div>
     <div class="site-footer__info">
       <address>{settings.address}</address>
       <a href={settings.telephoneHref} data-analytics-event="phone_click" data-analytics-location="footer">{settings.telephone}</a>
       <div class="action-row">
-        <ActionLink href={settings.links.order} label="온라인 주문하기" icon="order" event="order_click" location="footer" />
+        <ActionLink href={settings.links.order} label="메뉴 보고 주문하기" icon="order" event="order_click" location="footer" />
         <ActionLink href={settings.links.naverMap} label="길찾기" icon="map" variant="outline" event="directions_click" location="footer" service="naver" />
       </div>
     </div>
   </div>
   <div class="shell site-footer__bottom">
-    <small>© {new Date().getFullYear()} {settings.name}. 매장 운영 정보는 출시 전 최종 확인이 필요합니다.</small>
+    <small>© {new Date().getFullYear()} {settings.name} · 테이크아웃 중심 매장</small>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    border-top: 2px solid var(--color-toast-800);
-    background: var(--color-batter-400);
-    padding-block: clamp(3rem, 8vw, 5rem) 2rem;
+    border-top: 1px solid var(--color-stroke-neutral-subtle);
+    background: var(--color-bg-layer-fill);
+    padding-block: var(--dimension-x16) var(--dimension-x6);
   }
 
   .site-footer__grid {
     display: grid;
-    gap: 2.5rem;
+    gap: var(--dimension-x8);
   }
 
   .site-footer h2 {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--dimension-x2);
+    font-size: 1.5rem;
   }
 
   .site-footer__info {
     display: grid;
-    gap: 1rem;
+    gap: var(--dimension-x3);
     align-content: start;
   }
 
@@ -58,10 +58,16 @@ const { settings } = Astro.props;
     font-weight: 700;
   }
 
+  .site-footer p,
+  .site-footer a,
+  .site-footer small {
+    color: var(--color-fg-neutral-muted);
+  }
+
   .site-footer__bottom {
-    margin-top: 3rem;
-    border-top: 1px solid rgba(90, 46, 27, 0.28);
-    padding-top: 1rem;
+    margin-top: var(--dimension-x8);
+    border-top: 1px solid var(--color-stroke-neutral-subtle);
+    padding-top: var(--dimension-x4);
   }
 
   @media (min-width: 48rem) {

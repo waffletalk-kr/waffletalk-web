@@ -12,7 +12,6 @@ interface Props {
 
 const { currentPath, settings, businessHours, specialHours } = Astro.props;
 const navigation = [
-  { href: '/', label: '홈' },
   { href: '/menu', label: '메뉴' },
   { href: '/order', label: '주문' },
   { href: '/store', label: '매장 안내' },
@@ -22,52 +21,59 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
 ---
 
 <header class="site-header">
-  <div class="shell-wide site-header__top">
+  <div class="shell-wide site-header__inner">
     <a class="brand" href="/" aria-label={`${settings.name} 홈`}>
       <Icon name="waffle" />
       <strong>{settings.name}</strong>
     </a>
-    <BusinessStatus businessHours={businessHours} specialHours={specialHours} compact />
+    <nav class="site-nav" aria-label="주요 메뉴">
+      {navigation.map((item) => (
+        <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
+      ))}
+    </nav>
+    <div class="site-header__status">
+      <BusinessStatus businessHours={businessHours} specialHours={specialHours} compact />
+    </div>
   </div>
-  <nav class="shell-wide site-nav" aria-label="주요 메뉴">
-    {navigation.map((item) => (
-      <a href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>{item.label}</a>
-    ))}
-  </nav>
 </header>
 
 <style>
   .site-header {
-    position: relative;
+    position: sticky;
+    top: 0;
     z-index: 20;
-    border-bottom: 1px solid color-mix(in srgb, var(--color-toast-800) 18%, transparent);
-    background: color-mix(in srgb, var(--color-cream-50) 94%, transparent);
+    border-bottom: 1px solid var(--color-stroke-neutral-subtle);
+    background: color-mix(in srgb, var(--color-bg-layer-default) 94%, transparent);
     backdrop-filter: blur(12px);
   }
 
-  .site-header__top {
+  .site-header__inner {
     display: flex;
-    min-height: 4.5rem;
+    min-height: 4rem;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
+    gap: var(--dimension-x4);
   }
 
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
-    color: var(--color-toast-800);
-    font-family: var(--font-display);
-    font-size: 1.35rem;
+    flex: 0 0 auto;
+    gap: var(--dimension-x2);
+    color: var(--color-fg-neutral);
+    font-size: 1.25rem;
+    letter-spacing: -0.025em;
     text-decoration: none;
+  }
+
+  .brand :global(.icon) {
+    color: var(--color-fg-brand);
   }
 
   .site-nav {
     display: flex;
-    gap: 0.25rem;
+    gap: var(--dimension-x1);
     overflow-x: auto;
-    padding-bottom: 0.6rem;
+    margin-left: auto;
     scrollbar-width: none;
   }
 
@@ -78,38 +84,36 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
   .site-nav a {
     flex: 0 0 auto;
     min-height: 2.75rem;
-    border-radius: 9999px;
-    padding: 0.62rem 0.9rem;
-    color: var(--color-ink-700);
-    font-size: 0.9rem;
-    font-weight: 700;
+    border-radius: var(--radius-r2);
+    padding: 0.75rem var(--dimension-x3);
+    color: var(--color-fg-neutral-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
     text-decoration: none;
   }
 
   .site-nav a:hover,
   .site-nav a[aria-current='page'] {
-    background: var(--color-batter-100);
-    color: var(--color-toast-800);
+    background: var(--color-bg-neutral-weak);
+    color: var(--color-fg-neutral);
+    font-weight: 700;
+  }
+
+  .site-header__status {
+    display: none;
   }
 
   @media (min-width: 48rem) {
-    .site-header {
-      position: sticky;
-      top: 0;
-    }
-
-    .site-header__top {
-      min-height: 4rem;
+    .site-header__inner {
+      min-height: 4.5rem;
     }
 
     .site-nav {
-      position: absolute;
-      top: 0.62rem;
-      left: 50%;
-      width: auto;
-      max-width: 52vw;
-      transform: translateX(-50%);
-      padding-bottom: 0;
+      margin-inline: auto;
+    }
+
+    .site-header__status {
+      display: block;
     }
   }
 </style>

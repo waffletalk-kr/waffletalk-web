@@ -1,5 +1,5 @@
 ---
-import Icon from './Icon.astro';
+import SeedActionLink from './SeedActionLink';
 
 interface Props {
   href: string;
@@ -24,13 +24,13 @@ const {
 } = Astro.props;
 ---
 
-<a
+<SeedActionLink
   href={href}
-  class:list={['action-link', `action-link--${variant}`, className]}
-  data-analytics-event={event}
-  data-analytics-location={location}
-  data-analytics-service={service}
->
-  {icon && <Icon name={icon} />}
-  <span>{label}</span>
-</a>
+  label={label}
+  variant={variant}
+  icon={icon}
+  event={event}
+  location={location}
+  service={service}
+  className={className}
+/>
