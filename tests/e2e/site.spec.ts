@@ -30,6 +30,13 @@ test('주문 준비시간과 전화 대체 수단을 안내한다', async ({ pag
   await expect(page.getByRole('link', { name: /전화로 확인하기/ })).toHaveAttribute('href', 'tel:+82336413738');
 });
 
+test('브랜드 이야기에서 고객에게 필요한 제철 메뉴 정보만 안내한다', async ({ page }) => {
+  await page.goto('/story');
+
+  await expect(page.getByText('과일 메뉴는 계절과 재료에 따라 달라질 수 있어요.')).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('운영 담당자');
+});
+
 test('매장 안내에서 세 지도 서비스와 테이크아웃 정보를 제공한다', async ({ page }) => {
   await page.goto('/store');
 
